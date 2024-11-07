@@ -58,4 +58,43 @@ describe('Band, Musician, and Song Models', () => {
         expect(deletedMusician).toBeNull();
 
     })
+        //one to many
+        test("Band can have Many Musician",async function(){
+            const testBand = await Band.create({ name:'Canadian-American',genre:'rock' });
+            const testMusician1 = await Musician.create({ name:'Billie Eilish',instrument:'Violin' });
+            const testMusician2 = await Musician.create({ name:'Mickel',instrument:'drum' });
+    
+            await testBand.addMusicians(testMusician1);
+            await testBand.addMusicians(testMusician2);
+            const associateMusician = await testBand.getMusicians();
+            expect (associateMusician.length).toBe(2);
+            expect (associateMusician instanceof Musician).toBeTruthy;
+    
+        })
+        //many to many
+        test("Band can have Many Song",async function(){
+            const testBand = await Band.create({ name:'Canadian-American',genre:'rock' });
+            const testSong1 = await Song.create({ title:'Moon',year:2020,length:9 });
+            const testSong2 = await Song.create({ title:'Light',year:2022,length:7 });
+    
+            await testBand.addSongs(testSong1);
+            await testBand.addSongs(testSong2);
+            const associateSong = await testBand.getSongs();
+            expect (associateSong.length).toBe(2);
+            expect (associateSong instanceof Song).toBeTruthy;
+    
+        })
+        test("Song can have Many Band",async function(){
+            const testSong = await Song.create({ title:'Moon',year:2020,length:9 });
+            const testBand1 = await Band.create({ name:'American',genre:'rock' });
+            const testBand2 = await Band.create({ name:'American',genre:'Pop' });
+    
+            await testSong.addBands(testBand1);
+            await testSong.addBands(testBand2);
+            const associateBand = await testSong.getBands();
+            expect (associateBand.length).toBe(2);
+            expect (associateBand instanceof Band).toBeTruthy;
+    
+        })
+
 })
